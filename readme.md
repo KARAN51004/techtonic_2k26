@@ -162,7 +162,7 @@ Server Configuration
  Deployment Instructions
 
  1. Clone the repository
- git clone https://github.com/vitthalkendre29/Bamboozled-V-2
+
  cd Bamboozled-V-2
 
  2. Install dependencies
@@ -190,7 +190,4 @@ Server Configuration
  --Ensure mobile responsiveness with media queries and flexible layouts
  --Add service worker for offline capabilities if required
  --Implement rate limiting to prevent brute force attacks
-
- Contact Information:
- email: kendrevitthal225@gmail.com
 
