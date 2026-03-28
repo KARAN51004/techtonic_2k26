@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bamboozled Registration - TECHTONIC 2K26</title>
+
+  <link rel="stylesheet" href="./css/from.css">
+  <link rel="stylesheet" href="./css/login.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <span><img src="./images/logo.png" alt="logo" /></span>
+    </div>
+    <div class="title">
+        <h1>Sinhgad</h1>
+        <h2>TECHTONIC 2K26</h2>
+    </div>
+</header>
+
+<div class="hero">
+    <div class="tech-lines">
+      <div class="tech-line"></div>
+      <div class="tech-line"></div>
+      <div class="tech-line"></div>
+    </div>
+    <div class="hero-content">
+      <h2>Bamboozled</h2>
+    </div>
+</div>
+
+<div class="container">
+    <h1 class="form-title">Registration</h1>
+
+    <!-- ✅ FIXED FORM -->
+    <form id="registrationForm">
+
+        <div class="form-group">
+            <label class="label">Player Name</label>
+            <input type="text" id="playerName" required>
+            <div id="playerNameError" class="error-message">Invalid name</div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">Contact Number</label>
+            <input type="tel" id="contactNumber" required>
+            <div id="contactNumberError" class="error-message">Invalid number</div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">Email Address</label>
+            <input type="email" id="emailAddress" required>
+            <div id="emailAddressError" class="error-message">Invalid email</div>
+        </div>
+
+        <div class="form-group">
+            <label class="label">College</label>
+            <select id="college" required>
+                <option value="">Select</option>
+                <option value="sinhgad">Sinhgad Institute</option>
+                <option value="other">Other</option>
+            </select>
+            <div id="collegeError" class="error-message">Select college</div>
+        </div>
+
+        <div id="otherCollegeGroup" class="form-group" style="display:none;">
+            <label class="label">Other College</label>
+            <input type="text" id="otherCollegeName">
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="login-links">
+        <a href="/login">Already registered? Login</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("registrationForm");
+    const collegeSelect = document.getElementById("college");
+    const otherCollegeGroup = document.getElementById("otherCollegeGroup");
+
+    // Show/hide other college
+    collegeSelect.addEventListener("change", () => {
+        otherCollegeGroup.style.display =
+            collegeSelect.value === "other" ? "block" : "none";
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        let btn = form.querySelector("button");
+        btn.disabled = true;
+        btn.innerText = "Registering...";
+
+        let name = document.getElementById("playerName").value.trim();
+        let contactno = document.getElementById("contactNumber").value.trim();
+        let email = document.getElementById("emailAddress").value.trim();
+
+        // ✅ VALIDATION
+        let isValid = true;
+
+        if (!/^[A-Za-z\s]{3,50}$/.test(name)) {
+            document.getElementById("playerNameError").style.display = "block";
+            isValid = false;
+        }
+
+        if (!/^[6-9]\d{9}$/.test(contactno)) {
+            document.getElementById("contactNumberError").style.display = "block";
+            isValid = false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById("emailAddressError").style.display = "block";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            btn.disabled = false;
+            btn.innerText = "Register";
+            return;
+        }
+
+        // ✅ API CALL (FIXED)
+        try {
+            let res = await fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: playerName,
+                    email: email,
+                    contactno: contactno
+                })
+            });
+
+            let data = await res.json();
+
+            if (res.ok) {
+                alert("Registration successful!");
+                window.location.href = "/login";
+            } else {
+                alert(data.message || "Registration failed");
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert("Server error");
+        }
+
+        btn.disabled = false;
+        btn.innerText = "Register";
+    });
+});
+</script>
+
+</body>
+</html>
